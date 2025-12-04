@@ -8,7 +8,7 @@ import gsap from 'gsap';
 
 const container = ref(null);
 let scene, camera, renderer, composer;
-let core, wireframe, particles, dataStream;
+let core, wireframe, particles, dataStream, charts;
 let animationId;
 let targetScroll = 0;
 let currentScroll = 0;
@@ -44,6 +44,7 @@ const init = () => {
   createCore();
   createParticles();
   createDataStream();
+  //createCharts();
   createGrid();
 
   // Lights
@@ -65,15 +66,15 @@ const createCore = () => {
   // Inner glowing core
   const material = new THREE.MeshBasicMaterial({ color: 0x00f3ff, wireframe: true });
   core = new THREE.Mesh(geometry, material);
-  // Position core to the right
-  core.position.set(2, 0, 0);
+  // Position core at golden ratio (approximately 0.618 from center)
+  core.position.set(4, 0, 0);
   scene.add(core);
 
   // Outer wireframe
   const wireGeo = new THREE.IcosahedronGeometry(1.2, 1);
   const wireMat = new THREE.MeshBasicMaterial({ color: 0xbc13fe, wireframe: true, transparent: true, opacity: 0.3 });
   wireframe = new THREE.Mesh(wireGeo, wireMat);
-  wireframe.position.set(2, 0, 0);
+  wireframe.position.set(4, 0, 0);
   scene.add(wireframe);
 };
 
@@ -99,11 +100,11 @@ const createDataStream = () => {
   const geometry = new THREE.BufferGeometry();
   const vertices = [];
   
-  // Create a stream of particles flowing upwards/around
-  for (let i = 0; i < 500; i++) {
-    const x = 2 + (Math.random() - 0.5) * 2; // Centered around the core
-    const y = (Math.random() - 0.5) * 20;
-    const z = (Math.random() - 0.5) * 2;
+  // Create a stream of particles flowing upwards/around (further reduced)
+  for (let i = 0; i < 100; i++) {
+    const x = 4 + (Math.random() - 0.5) * 4; // Centered around the new core position
+    const y = (Math.random() - 0.5) * 40;
+    const z = (Math.random() - 0.5) * 4;
     vertices.push(x, y, z);
   }
   
@@ -114,6 +115,33 @@ const createDataStream = () => {
   const material = new THREE.PointsMaterial({ color: 0x00f3ff, size: 0.05, transparent: true, opacity: 0.6 });
   dataStream = new THREE.Points(geometry, material);
   scene.add(dataStream);
+};
+
+const createCharts = () => {
+  charts = new THREE.Group();
+  
+  // Create 3D bar chart for market stats
+  const barData = [
+    { height: 3.38, color: 0x00f3ff, position: [-6, 0, 2] },
+    { height: 1.84, color: 0xbc13fe, position: [-6, 0, 0] },
+    { height: 4.0, color: 0x00f3ff, position: [-6, 0, -2] },
+    { height: 2.33, color: 0xbc13fe, position: [-6, 0, -4] }
+  ];
+  
+  barData.forEach((bar) => {
+    const geometry = new THREE.BoxGeometry(0.5, bar.height, 0.5);
+    const material = new THREE.MeshBasicMaterial({ 
+      color: bar.color, 
+      wireframe: true,
+      transparent: true,
+      opacity: 0.7
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(bar.position[0], bar.height / 2 - 2, bar.position[2]);
+    charts.add(mesh);
+  });
+  
+  scene.add(charts);
 };
 
 const createGrid = () => {
@@ -170,8 +198,8 @@ const animate = () => {
   camera.position.z = Math.sin(angle) * radius;
   camera.position.y = currentScroll * 5;
   
-  // Look at the core's position
-  camera.lookAt(2, 0, 0);
+  // Look at scene center - sphere at x=4 appears at golden ratio on screen
+  camera.lookAt(0, 0, 0);
 
   if (core) {
     core.rotation.x += 0.005;
@@ -193,12 +221,16 @@ const animate = () => {
   if (dataStream) {
     const positions = dataStream.geometry.attributes.position.array;
     for(let i = 1; i < positions.length; i += 3) {
-      positions[i] += 0.05; // Move up
+      positions[i] += 0.02; // Move up slowly
       if (positions[i] > 10) {
         positions[i] = -10;
       }
     }
     dataStream.geometry.attributes.position.needsUpdate = true;
+  }
+  
+  if (charts) {
+    charts.rotation.y = time * 0.1;
   }
 
   composer.render();

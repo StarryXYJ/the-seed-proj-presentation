@@ -18,8 +18,8 @@ export default {
             stats: [
                 { value: '33.8亿', label: '全球玩家' },
                 { value: '1840亿美元', label: '市场规模' },
-                { value: '4亿', label: '残疾玩家' },
-                { value: '23.3% 复合年增长率', label: '游戏生成式AI' }
+                { value: '4亿', label: '残障玩家' },
+                { value: '23.3% CAGR', label: '游戏生成式AI' }
             ],
             insights: [
                 '游戏已是全球最大的数字娱乐产业，任何交互方式的革新都将撬动千亿级市场。',
@@ -84,8 +84,8 @@ export default {
             title: '技术架构',
             description: '双循环系统',
             loops: [
-                { name: '内部循环', description: 'AI Agent ↔ 游戏状态与操作' },
-                { name: '外部循环', description: '玩家 ↔ AI Agent指令与反馈' }
+                { name: '内部循环', description: '游戏状态 ↔ AI Agent命令' },
+                { name: '外部循环', description: 'AI Agent反馈 ↔ 玩家指令' }
             ]
         },
 
@@ -121,6 +121,6 @@ export default {
             ]
         },
 
-        footer: '© The Seed 项目。灵感来自《刀剑神域》。'
+        footer: '© Project The Seed'
     }
 };

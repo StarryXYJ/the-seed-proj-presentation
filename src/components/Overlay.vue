@@ -174,7 +174,7 @@ const toggleLang = () => {
   position: relative;
   z-index: 1;
   color: #fff;
-  width: 100%;
+  width: 200%;
 }
 
 /* Language Toggle */
@@ -238,7 +238,7 @@ section {
 
 /* Content Sections - Left Aligned */
 .content-left {
-  max-width: 50%;
+  max-width: 62%;
   width: 100%;
   padding-right: 2rem;
 }
@@ -254,33 +254,45 @@ section {
   font-size: 1.8rem;
   color: var(--color-secondary);
   margin: 2rem 0 1rem;
+  font-weight: bold;
+  text-shadow: 0 0 15px rgba(188, 19, 254, 0.6);
 }
 
-/* Glass Effect */
+/* Glass Effect - Enhanced Acrylic/Frosted Glass */
 .glass {
-  background: rgba(5, 5, 16, 0.75);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  border: 1px solid rgba(0, 243, 255, 0.3);
-  border-radius: 16px;
+  background: rgba(5, 5, 16, 0.6);
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  border: 1.5px solid rgba(0, 243, 255, 0.4);
+  border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 20px rgba(0, 243, 255, 0.1);
   transition: all 0.3s ease;
 }
 
 .glass-subtle {
-  background: rgba(5, 5, 16, 0.5);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 243, 255, 0.2);
+  background: rgba(5, 5, 16, 0.4);
+  backdrop-filter: blur(15px) saturate(150%);
+  -webkit-backdrop-filter: blur(15px) saturate(150%);
+  border: 1px solid rgba(0, 243, 255, 0.25);
   border-radius: 12px;
   padding: 1.5rem;
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .glass:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 40px rgba(0, 243, 255, 0.2);
+  box-shadow: 
+    0 12px 48px rgba(0, 243, 255, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 0 30px rgba(0, 243, 255, 0.2);
   border-color: var(--color-primary);
+  background: rgba(5, 5, 16, 0.7);
 }
 
 .card {
@@ -321,6 +333,8 @@ section {
   font-size: 2.5rem;
   color: var(--color-secondary);
   margin-bottom: 0.5rem;
+  font-weight: bold;
+  text-shadow: 0 0 15px rgba(188, 19, 254, 0.6);
 }
 
 .stat-card p {
@@ -333,6 +347,8 @@ section {
   color: var(--color-primary);
   margin-bottom: 0.75rem;
   font-size: 1.5rem;
+  font-weight: bold;
+  text-shadow: 0 0 12px rgba(0, 243, 255, 0.6);
 }
 
 .feature-desc {
@@ -379,6 +395,8 @@ section {
 .loop h4 {
   color: var(--color-primary);
   margin-bottom: 0.5rem;
+  font-weight: bold;
+  text-shadow: 0 0 12px rgba(0, 243, 255, 0.6);
 }
 
 .loop p {
