@@ -1,128 +1,170 @@
 <script setup>
+import { ref } from 'vue';
+import zh from '../locales/zh.js';
+import en from '../locales/en.js';
+
+const locales = { zh, en };
+const currentLang = ref('zh');
+const t = ref(locales[currentLang.value]);
+
+const toggleLang = () => {
+  currentLang.value = currentLang.value === 'zh' ? 'en' : 'zh';
+  t.value = locales[currentLang.value];
+};
 </script>
 
 <template>
   <div class="overlay">
+    <!-- Language Toggle -->
+    <button class="lang-toggle glass" @click="toggleLang">
+      {{ currentLang === 'zh' ? 'EN' : '中文' }}
+    </button>
+
+    <!-- Hero Section -->
     <section class="hero">
-      <h1 class="glitch" data-text="THE SEED">THE SEED</h1>
-      <p class="subtitle">Game Interaction Agent</p>
-      <p class="tagline">The Next Generation of Gaming Interaction</p>
-      <div class="scroll-indicator">
-        <span>SCROLL TO EXPLORE</span>
-        <div class="arrow"></div>
-      </div>
-    </section>
-
-    <section class="content-section">
-      <h2>Vision</h2>
-      <div class="card glass">
-        <p>A unified Agent access protocol for games, enabling real-time perception and controllable operation by AI Agents.</p>
-        <p>The next interaction paradigm after Mouse, Keyboard, and Gamepad.</p>
-      </div>
-    </section>
-
-    <section class="content-section">
-      <h2>Market Opportunity</h2>
-      <div class="grid-2">
-        <div class="stat-card glass">
-          <h3>3.38 Billion</h3>
-          <p>Global Players</p>
-        </div>
-        <div class="stat-card glass">
-          <h3>$184 Billion</h3>
-          <p>Market Size</p>
-        </div>
-        <div class="stat-card glass">
-          <h3>400 Million</h3>
-          <p>Disabled Players</p>
-        </div>
-        <div class="stat-card glass">
-          <h3>23.3% CAGR</h3>
-          <p>Generative AI in Gaming</p>
+      <div class="hero-content">
+        <h1 class="glitch" :data-text="t.title">{{ t.title }}</h1>
+        <p class="subtitle">{{ t.subtitle }}</p>
+        <p class="tagline">{{ t.tagline }}</p>
+        <div class="scroll-indicator">
+          <span>{{ t.scrollToExplore }}</span>
+          <div class="arrow"></div>
         </div>
       </div>
     </section>
 
+    <!-- Vision -->
     <section class="content-section">
-      <h2>Core Features</h2>
-      <div class="features-grid">
-        <div class="feature-card glass">
-          <h3>GIA Copilot</h3>
-          <ul>
-            <li>Voice Control</li>
-            <li>Auto-Farming</li>
-            <li>Tactical Advisor</li>
-          </ul>
-        </div>
-        <div class="feature-card glass">
-          <h3>Deep-NPC</h3>
-          <ul>
-            <li>Long-term Memory</li>
-            <li>Autonomous Decision</li>
-            <li>Complex Social Interaction</li>
-          </ul>
-        </div>
-        <div class="feature-card glass">
-          <h3>Dynamic Narrative</h3>
-          <ul>
-            <li>Real-time Plot Generation</li>
-            <li>Emergent Gameplay</li>
-            <li>High Replayability</li>
-          </ul>
+      <div class="content-left">
+        <h2>{{ t.sections.vision.title }}</h2>
+        <div class="card glass">
+          <p v-for="(text, i) in t.sections.vision.content" :key="i">{{ text }}</p>
         </div>
       </div>
     </section>
 
+    <!-- Market Opportunity -->
     <section class="content-section">
-      <h2>Architecture</h2>
-      <div class="card glass">
-        <h3>Dual Loop System</h3>
-        <div class="architecture-diagram">
-          <div class="loop">
-            <h4>Internal Loop</h4>
-            <p>Agent <-> Game State</p>
+      <div class="content-left">
+        <h2>{{ t.sections.market.title }}</h2>
+        <div class="grid-2">
+          <div class="stat-card glass" v-for="stat in t.sections.market.stats" :key="stat.label">
+            <h3>{{ stat.value }}</h3>
+            <p>{{ stat.label }}</p>
           </div>
-          <div class="loop">
-            <h4>External Loop</h4>
-            <p>Player <-> Agent</p>
+        </div>
+        <div class="card glass insights">
+          <p v-for="(insight, i) in t.sections.market.insights" :key="i">{{ insight }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pain Points -->
+    <section class="content-section">
+      <div class="content-left">
+        <h2>{{ t.sections.painPoints.title }}</h2>
+        <div class="card glass">
+          <ul class="pain-list">
+            <li v-for="(point, i) in t.sections.painPoints.points" :key="i">{{ point }}</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Features -->
+    <section class="content-section">
+      <div class="content-left">
+        <h2>{{ t.sections.features.title }}</h2>
+        
+        <h3 class="subsection-title">{{ t.sections.features.nonCore.title }}</h3>
+        <div class="feature-card glass" v-for="item in t.sections.features.nonCore.items" :key="item.name">
+          <h4>{{ item.name }}</h4>
+          <p class="feature-desc">{{ item.description }}</p>
+          <ul>
+            <li v-for="(feat, i) in item.features" :key="i">{{ feat }}</li>
+          </ul>
+        </div>
+
+        <h3 class="subsection-title">{{ t.sections.features.core.title }}</h3>
+        <div class="features-grid">
+          <div class="feature-card glass" v-for="item in t.sections.features.core.items" :key="item.name">
+            <h4>{{ item.name }}</h4>
+            <p class="feature-desc">{{ item.description }}</p>
+            <ul>
+              <li v-for="(feat, i) in item.features" :key="i">{{ feat }}</li>
+            </ul>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- Architecture -->
     <section class="content-section">
-      <h2>Business Model</h2>
-      <div class="grid-2">
+      <div class="content-left">
+        <h2>{{ t.sections.architecture.title }}</h2>
         <div class="card glass">
-          <h3>ToC</h3>
-          <p>Subscription / Token Sales</p>
-          <p>Persona Marketplace</p>
-        </div>
-        <div class="card glass">
-          <h3>ToB</h3>
-          <p>SDK Licensing</p>
-          <p>Dev Support Services</p>
+          <h3>{{ t.sections.architecture.description }}</h3>
+          <div class="architecture-diagram">
+            <div class="loop glass-subtle" v-for="loop in t.sections.architecture.loops" :key="loop.name">
+              <h4>{{ loop.name }}</h4>
+              <p>{{ loop.description }}</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
+    <!-- Business Model -->
     <section class="content-section">
-      <h2>Links</h2>
-      <div class="links-container glass">
-        <a href="https://github.com/anantheparty/The-Seed" target="_blank" class="link-btn">
-          Project Repository
-        </a>
-        <a href="https://github.com/anantheparty/THE-Seed-OpenRA" target="_blank" class="link-btn">
-          Application Demo
-        </a>
-        <a href="https://github.com/AI-for-anyone/RedAlert" target="_blank" class="link-btn">
-          Predecessor Project
-        </a>
+      <div class="content-left">
+        <h2>{{ t.sections.business.title }}</h2>
+        <div class="grid-2">
+          <div class="card glass">
+            <h3>{{ t.sections.business.toc.title }}</h3>
+            <ul>
+              <li v-for="(item, i) in t.sections.business.toc.items" :key="i">{{ item }}</li>
+            </ul>
+          </div>
+          <div class="card glass">
+            <h3>{{ t.sections.business.tob.title }}</h3>
+            <ul>
+              <li v-for="(item, i) in t.sections.business.tob.items" :key="i">{{ item }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Conclusion -->
+    <section class="content-section">
+      <div class="content-left">
+        <h2>{{ t.sections.conclusion.title }}</h2>
+        <div class="card glass">
+          <p class="conclusion-text">{{ t.sections.conclusion.content }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Links -->
+    <section class="content-section">
+      <div class="content-left">
+        <h2>{{ t.sections.links.title }}</h2>
+        <div class="links-container glass">
+          <a 
+            v-for="link in t.sections.links.items" 
+            :key="link.url"
+            :href="link.url" 
+            target="_blank" 
+            class="link-btn"
+          >
+            {{ link.label }}
+          </a>
+        </div>
       </div>
     </section>
 
     <footer class="footer">
-      <p>&copy; The Seed Project. Inspired by SAO.</p>
+      <p>{{ t.sections.footer }}</p>
     </footer>
   </div>
 </template>
@@ -135,14 +177,44 @@
   width: 100%;
 }
 
+/* Language Toggle */
+.lang-toggle {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 100;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--color-primary);
+  background: rgba(5, 5, 16, 0.8);
+  color: var(--color-primary);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.lang-toggle:hover {
+  background: var(--color-primary);
+  color: #000;
+  transform: scale(1.05);
+}
+
 section {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: flex-start;
+  padding: 4rem 2rem;
+}
+
+/* Hero Section - Centered */
+.hero {
   align-items: center;
-  padding: 2rem;
   text-align: center;
+}
+
+.hero-content {
+  width: 100%;
 }
 
 .hero h1 {
@@ -164,69 +236,164 @@ section {
   color: var(--color-text-dim);
 }
 
+/* Content Sections - Left Aligned */
+.content-left {
+  max-width: 50%;
+  width: 100%;
+  padding-right: 2rem;
+}
+
+.content-section h2 {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  color: var(--color-primary);
+  text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+}
+
+.subsection-title {
+  font-size: 1.8rem;
+  color: var(--color-secondary);
+  margin: 2rem 0 1rem;
+}
+
+/* Glass Effect */
 .glass {
-  background: rgba(5, 5, 16, 0.7);
-  backdrop-filter: blur(10px);
+  background: rgba(5, 5, 16, 0.75);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   border: 1px solid rgba(0, 243, 255, 0.3);
   border-radius: 16px;
   padding: 2rem;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.glass-subtle {
+  background: rgba(5, 5, 16, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 243, 255, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
 }
 
 .glass:hover {
   transform: translateY(-5px);
-  box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+  box-shadow: 0 12px 40px rgba(0, 243, 255, 0.2);
   border-color: var(--color-primary);
 }
 
+.card {
+  margin-bottom: 1.5rem;
+}
+
+.card p {
+  margin-bottom: 1rem;
+  line-height: 1.8;
+}
+
+.insights {
+  margin-top: 1.5rem;
+}
+
+.insights p {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Grids */
 .grid-2 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  width: 100%;
-  max-width: 1000px;
-  margin-top: 2rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  width: 100%;
-  max-width: 1200px;
-  margin-top: 2rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
+/* Stats */
 .stat-card h3 {
   font-size: 2.5rem;
   color: var(--color-secondary);
   margin-bottom: 0.5rem;
 }
 
-.feature-card h3 {
+.stat-card p {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Features */
+.feature-card h4 {
   color: var(--color-primary);
+  margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+}
+
+.feature-desc {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
   margin-bottom: 1rem;
 }
 
-.feature-card ul {
+.feature-card ul,
+.card ul {
   list-style: none;
   text-align: left;
 }
 
-.feature-card li {
-  margin-bottom: 0.5rem;
+.feature-card li,
+.card li {
+  margin-bottom: 0.75rem;
   padding-left: 1.5rem;
   position: relative;
+  line-height: 1.6;
 }
 
-.feature-card li::before {
-  content: '>';
+.feature-card li::before,
+.card li::before {
+  content: '▹';
   position: absolute;
   left: 0;
   color: var(--color-secondary);
+  font-size: 1.2rem;
 }
 
+.pain-list li {
+  font-size: 1.05rem;
+}
+
+/* Architecture */
+.architecture-diagram {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.loop h4 {
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.loop p {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Conclusion */
+.conclusion-text {
+  font-size: 1.1rem;
+  line-height: 2;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Links */
 .link-btn {
   display: block;
   margin: 1rem 0;
@@ -237,11 +404,14 @@ section {
   font-weight: bold;
   text-transform: uppercase;
   background: rgba(0, 243, 255, 0.1);
+  text-decoration: none;
+  transition: all 0.3s ease;
 }
 
 .link-btn:hover {
   background: var(--color-primary);
   color: #000;
+  transform: translateX(5px);
 }
 
 .links-container {
@@ -249,10 +419,20 @@ section {
   max-width: 600px;
 }
 
+/* Scroll Indicator */
 .scroll-indicator {
   position: absolute;
   bottom: 2rem;
   animation: bounce 2s infinite;
+}
+
+.arrow {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid var(--color-primary);
+  margin: 0.5rem auto;
 }
 
 @keyframes bounce {
@@ -306,5 +486,39 @@ section {
   15% { clip: rect(80px, 9999px, 5px, 0); }
   20% { clip: rect(30px, 9999px, 10px, 0); }
   100% { clip: rect(0, 0, 0, 0); }
+}
+
+/* Footer */
+.footer {
+  min-height: auto;
+  padding: 2rem;
+  text-align: center;
+  opacity: 0.6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .content-left {
+    max-width: 100%;
+    padding-right: 0;
+  }
+
+  .grid-2,
+  .features-grid,
+  .architecture-diagram {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h1 {
+    font-size: 3rem;
+  }
+
+  .subtitle {
+    font-size: 1.5rem;
+  }
+
+  .content-section h2 {
+    font-size: 2rem;
+  }
 }
 </style>

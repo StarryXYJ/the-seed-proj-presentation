@@ -8,8 +8,10 @@ import gsap from 'gsap';
 
 const container = ref(null);
 let scene, camera, renderer, composer;
-let core, wireframe, particles;
+let core, wireframe, particles, dataStream;
 let animationId;
+let targetScroll = 0;
+let currentScroll = 0;
 
 const init = () => {
   // Scene
@@ -41,6 +43,7 @@ const init = () => {
   // Objects
   createCore();
   createParticles();
+  createDataStream();
   createGrid();
 
   // Lights
@@ -62,12 +65,15 @@ const createCore = () => {
   // Inner glowing core
   const material = new THREE.MeshBasicMaterial({ color: 0x00f3ff, wireframe: true });
   core = new THREE.Mesh(geometry, material);
+  // Position core to the right
+  core.position.set(2, 0, 0);
   scene.add(core);
 
   // Outer wireframe
   const wireGeo = new THREE.IcosahedronGeometry(1.2, 1);
   const wireMat = new THREE.MeshBasicMaterial({ color: 0xbc13fe, wireframe: true, transparent: true, opacity: 0.3 });
   wireframe = new THREE.Mesh(wireGeo, wireMat);
+  wireframe.position.set(2, 0, 0);
   scene.add(wireframe);
 };
 
@@ -76,9 +82,10 @@ const createParticles = () => {
   const vertices = [];
   
   for (let i = 0; i < 2000; i++) {
-    const x = (Math.random() - 0.5) * 20;
-    const y = (Math.random() - 0.5) * 20;
-    const z = (Math.random() - 0.5) * 20;
+    // Spread particles wider
+    const x = (Math.random() - 0.5) * 30;
+    const y = (Math.random() - 0.5) * 30;
+    const z = (Math.random() - 0.5) * 30;
     vertices.push(x, y, z);
   }
   
@@ -86,6 +93,27 @@ const createParticles = () => {
   const material = new THREE.PointsMaterial({ color: 0xffffff, size: 0.02 });
   particles = new THREE.Points(geometry, material);
   scene.add(particles);
+};
+
+const createDataStream = () => {
+  const geometry = new THREE.BufferGeometry();
+  const vertices = [];
+  
+  // Create a stream of particles flowing upwards/around
+  for (let i = 0; i < 500; i++) {
+    const x = 2 + (Math.random() - 0.5) * 2; // Centered around the core
+    const y = (Math.random() - 0.5) * 20;
+    const z = (Math.random() - 0.5) * 2;
+    vertices.push(x, y, z);
+  }
+  
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+  // Store initial positions for animation
+  geometry.userData = { initialY: vertices.filter((_, i) => i % 3 === 1) };
+  
+  const material = new THREE.PointsMaterial({ color: 0x00f3ff, size: 0.05, transparent: true, opacity: 0.6 });
+  dataStream = new THREE.Points(geometry, material);
+  scene.add(dataStream);
 };
 
 const createGrid = () => {
@@ -104,22 +132,8 @@ const onWindowResize = () => {
 const onScroll = () => {
   const scrollY = window.scrollY;
   const maxScroll = document.body.scrollHeight - window.innerHeight;
-  const scrollFraction = scrollY / maxScroll;
-
-  // Animate camera based on scroll
-  // Move camera back and rotate around
-  const angle = scrollFraction * Math.PI * 2;
-  const radius = 5 + scrollFraction * 5;
-  
-  gsap.to(camera.position, {
-    x: Math.cos(angle) * radius,
-    z: Math.sin(angle) * radius,
-    y: scrollFraction * 2,
-    duration: 1,
-    ease: 'power2.out'
-  });
-  
-  camera.lookAt(0, 0, 0);
+  // Update target scroll fraction (0 to 1)
+  targetScroll = scrollY / maxScroll;
 };
 
 const animate = () => {
@@ -140,8 +154,51 @@ const animate = () => {
     wireframe.rotation.y -= 0.002;
   }
 
+  // Smooth scroll interpolation
+  currentScroll += (targetScroll - currentScroll) * 0.05;
+
+  // Camera animation based on smoothed scroll
+  const angle = currentScroll * Math.PI * 2;
+  const radius = 6 + currentScroll * 4;
+  
+  // Camera orbits around the center but looks at the offset core
+  // We want the core (at x=2) to be on the right side of the screen.
+  // So the camera should look slightly to the left of the core, or we just position the core to the right.
+  // Since we moved the core to x=2, let's just orbit around (0,0,0) or slightly offset.
+  
+  camera.position.x = Math.cos(angle) * radius;
+  camera.position.z = Math.sin(angle) * radius;
+  camera.position.y = currentScroll * 5;
+  
+  // Look at the core's position
+  camera.lookAt(2, 0, 0);
+
+  if (core) {
+    core.rotation.x += 0.005;
+    core.rotation.y += 0.005;
+    // Pulse effect
+    const scale = 1 + Math.sin(time * 2) * 0.1;
+    core.scale.set(scale, scale, scale);
+  }
+
+  if (wireframe) {
+    wireframe.rotation.x -= 0.002;
+    wireframe.rotation.y -= 0.002;
+  }
+
   if (particles) {
     particles.rotation.y = time * 0.05;
+  }
+  
+  if (dataStream) {
+    const positions = dataStream.geometry.attributes.position.array;
+    for(let i = 1; i < positions.length; i += 3) {
+      positions[i] += 0.05; // Move up
+      if (positions[i] > 10) {
+        positions[i] = -10;
+      }
+    }
+    dataStream.geometry.attributes.position.needsUpdate = true;
   }
 
   composer.render();
