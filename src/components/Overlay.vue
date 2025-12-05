@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import zh from '../locales/zh.js';
 import en from '../locales/en.js';
 
@@ -11,6 +11,42 @@ const toggleLang = () => {
   currentLang.value = currentLang.value === 'zh' ? 'en' : 'zh';
   t.value = locales[currentLang.value];
 };
+
+// Full-page scroll snap
+let isScrolling = false;
+let currentSection = 0;
+const totalSections = ref(10); // Total number of sections
+
+const handleWheel = (e) => {
+  if (isScrolling) return;
+  
+  e.preventDefault();
+  
+  const direction = e.deltaY > 0 ? 1 : -1;
+  const nextSection = currentSection + direction;
+  
+  if (nextSection >= 0 && nextSection < totalSections.value) {
+    isScrolling = true;
+    currentSection = nextSection;
+    
+    const sections = document.querySelectorAll('section');
+    if (sections[currentSection]) {
+      sections[currentSection].scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    setTimeout(() => {
+      isScrolling = false;
+    }, 1000); // Debounce time
+  }
+};
+
+onMounted(() => {
+  window.addEventListener('wheel', handleWheel, { passive: false });
+});
+
+onUnmounted(() => {
+  window.removeEventListener('wheel', handleWheel);
+});
 </script>
 
 <template>
@@ -33,33 +69,9 @@ const toggleLang = () => {
       </div>
     </section>
 
-    <!-- Vision -->
-    <section class="content-section">
-      <div class="content-left">
-        <h2>{{ t.sections.vision.title }}</h2>
-        <div class="card glass">
-          <p v-for="(text, i) in t.sections.vision.content" :key="i">{{ text }}</p>
-        </div>
-      </div>
-    </section>
+    
 
-    <!-- Market Opportunity -->
-    <section class="content-section">
-      <div class="content-left">
-        <h2>{{ t.sections.market.title }}</h2>
-        <div class="grid-2">
-          <div class="stat-card glass" v-for="stat in t.sections.market.stats" :key="stat.label">
-            <h3>{{ stat.value }}</h3>
-            <p>{{ stat.label }}</p>
-          </div>
-        </div>
-        <div class="card glass insights">
-          <p v-for="(insight, i) in t.sections.market.insights" :key="i">{{ insight }}</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Pain Points -->
+  <!-- Pain Points -->
     <section class="content-section">
       <div class="content-left">
         <h2>{{ t.sections.painPoints.title }}</h2>
@@ -70,6 +82,18 @@ const toggleLang = () => {
         </div>
       </div>
     </section>
+
+    <!-- Vision -->
+    <section class="content-section">
+      <div class="content-left">
+        <h2>{{ t.sections.vision.title }}</h2>
+        <div class="card glass">
+          <p v-for="(text, i) in t.sections.vision.content" :key="i">{{ text }}</p>
+        </div>
+      </div>
+    </section>
+
+    
 
     <!-- Core Features -->
     <section class="content-section">
@@ -104,12 +128,26 @@ const toggleLang = () => {
         <h2>{{ t.sections.architecture.title }}</h2>
         <div class="card glass">
           <h3>{{ t.sections.architecture.description }}</h3>
-          <div class="architecture-diagram">
-            <div class="loop glass-subtle" v-for="loop in t.sections.architecture.loops" :key="loop.name">
-              <h4>{{ loop.name }}</h4>
-              <p>{{ loop.description }}</p>
-            </div>
+
+
+              <p horizontal-align="center">{{ t.sections.architecture.loops[0].description }}</p>
+
+        </div>
+      </div>
+    </section>
+
+<!-- Market Opportunity -->
+    <section class="content-section">
+      <div class="content-left">
+        <h2>{{ t.sections.market.title }}</h2>
+        <div class="grid-2">
+          <div class="stat-card glass" v-for="stat in t.sections.market.stats" :key="stat.label">
+            <h3>{{ stat.value }}</h3>
+            <p>{{ stat.label }}</p>
           </div>
+        </div>
+        <div class="card glass insights">
+          <p v-for="(insight, i) in t.sections.market.insights" :key="i">{{ insight }}</p>
         </div>
       </div>
     </section>
@@ -200,11 +238,14 @@ const toggleLang = () => {
 
 section {
   min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
   padding: 4rem 2rem;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 /* Hero Section - Centered */
@@ -247,7 +288,9 @@ section {
   font-size: 3rem;
   margin-bottom: 2rem;
   color: var(--color-primary);
-  text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+  text-shadow: 
+  0 0 20px rgba(0, 243, 255, 0.8),
+  0 0 40px rgba(0, 200, 255, 0.425);
 }
 
 .subsection-title {
@@ -255,7 +298,10 @@ section {
   color: var(--color-secondary);
   margin: 2rem 0 1rem;
   font-weight: bold;
-  text-shadow: 0 0 15px rgba(188, 19, 254, 0.6);
+  text-shadow: 
+    0 0 15px rgba(188, 19, 254, 0.6),
+    0 0 25px rgba(188, 19, 254, 0.3),
+    0 0 40px rgba(188, 19, 254, 0.2);
 }
 
 /* Glass Effect - Enhanced Acrylic/Frosted Glass */

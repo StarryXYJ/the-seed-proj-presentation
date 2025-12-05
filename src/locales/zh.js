@@ -6,10 +6,12 @@ export default {
 
     sections: {
         vision: {
-            title: '愿景',
+            title: '介绍与愿景',
             content: [
-                '面向游戏开发者的开源框架，通过统一的Agent接入协议，实现AI Agent对游戏的实时感知与可控操作。',
-                '成为继鼠标、键盘、手柄之后，下一代游戏交互方式。'
+                'The Seed是一个面向游戏开发者的开源框架，通过统一的Agent接入协议，实现AI Agent对游戏的实时感知与交互。',
+                '在可控算力消耗下，让 LLM 与传统游戏 AI 形成互补，协同处理决策与执行。',
+                '是继鼠标、键盘、手柄之后，下一代游戏交互方式',
+                '也是下一代的游戏玩法'
             ]
         },
 
@@ -31,7 +33,7 @@ export default {
         painPoints: {
             title: '痛点与挑战',
             points: [
-                '传统游戏操作方式门槛高，学习成本大',
+                '部分传统游戏操作方式门槛高，学习成本大，缺少攻略体验较差',
                 '部分游戏存在大量重复劳动（刷材料、跑图等）',
                 '视障/肢体障碍玩家缺乏友好的可访问性方案',
                 'NPC交互依旧停留在固定文本或脚本，缺乏真实感',
@@ -50,7 +52,8 @@ export default {
                         features: [
                             '语音控制：通过自然语言指令（"帮我跑到最近的商店买十瓶血药"）直接映射为游戏操作',
                             '智能代肝：基于视觉识别，自动执行采集、搬运等低策略重复任务',
-                            '战术参谋：实时分析战局，提供类似《钢铁侠》JARVIS的语音战术建议'
+                            '战术参谋：实时分析战局或提供操作教程与提示，提供类似《钢铁侠》JARVIS的语音战术建议',
+                            '残障人士辅助：如对于视障人士等提供实时智能的语音描述，对于肢体障碍人士等提供智能的语音控制'
                         ]
                     }
                 ]
@@ -64,7 +67,7 @@ export default {
                         features: [
                             '可用自然语言实现外交、交易、战术沟通等',
                             '参与解谜、探索、战斗等游戏核心玩法',
-                            'AI角色可能因性格不合而"抗命"或"叛变"'
+                            'AI角色可能"抗命"或"叛变"'
                         ]
                     },
                     {
@@ -84,8 +87,8 @@ export default {
             title: '技术架构',
             description: '双循环系统',
             loops: [
-                { name: '内部循环', description: '游戏状态 ↔ AI Agent命令' },
-                { name: '外部循环', description: 'AI Agent反馈 ↔ 玩家指令' }
+                // { name: '内部循环', description: '游戏状态 ↔ AI Agent命令' },
+                { name: '', description: '游戏状态 ↔ AI Agent ↔ 玩家指令' }
             ]
         },
 
@@ -109,7 +112,7 @@ export default {
 
         conclusion: {
             title: '未来的种子',
-            content: '在作品SAO中，也存在名为The Seed的开发套件，以此为基础构建了一整个由大量虚拟游戏环境组成的系统，是虚拟世界的种子，也是未来的种子。我们相信我们的The Seed也会在开源社区等的孕育下，成长出无数次世代的，拥有灵魂的NPC、游戏以及泛化的虚拟世界，在未来愈加完善，拥有越来越强大的功能，提供更丰富的更有价值的无限可能。'
+            content: 'THE SEED'
         },
 
         links: {
@@ -117,7 +120,7 @@ export default {
             items: [
                 { label: '项目仓库', url: 'https://github.com/anantheparty/The-Seed' },
                 { label: '应用演示', url: 'https://github.com/anantheparty/THE-Seed-OpenRA' },
-                { label: '前置项目', url: 'https://github.com/AI-for-anyone/RedAlert' }
+                { label: '前身项目', url: 'https://github.com/AI-for-anyone/RedAlert' }
             ]
         },
 

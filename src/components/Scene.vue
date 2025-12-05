@@ -102,9 +102,9 @@ const createDataStream = () => {
   
   // Create a stream of particles flowing upwards/around (further reduced)
   for (let i = 0; i < 100; i++) {
-    const x = 4 + (Math.random() - 0.5) * 4; // Centered around the new core position
-    const y = (Math.random() - 0.5) * 40;
-    const z = (Math.random() - 0.5) * 4;
+    const x = 4 + (Math.random() - 0.5) * 5; // Centered around the new core position
+    const y = (Math.random() - 0.5) * 50;
+    const z = (Math.random() - 0.5) * 5;
     vertices.push(x, y, z);
   }
   
