@@ -122,19 +122,7 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <!-- Architecture -->
-    <section class="content-section">
-      <div class="content-left">
-        <h2>{{ t.sections.architecture.title }}</h2>
-        <div class="card glass">
-          <h3>{{ t.sections.architecture.description }}</h3>
-
-
-              <p horizontal-align="center">{{ t.sections.architecture.loops[0].description }}</p>
-
-        </div>
-      </div>
-    </section>
+    
 
 <!-- Market Opportunity -->
     <section class="content-section">
@@ -172,7 +160,19 @@ onUnmounted(() => {
         </div>
       </div>
     </section>
+<!-- Architecture -->
+    <section class="content-section">
+      <div class="content-left">
+        <h2>{{ t.sections.architecture.title }}</h2>
+        <div class="card glass">
+          <h3>{{ t.sections.architecture.description }}</h3>
 
+
+              <p horizontal-align="center">{{ t.sections.architecture.loops[0].description }}</p>
+
+        </div>
+      </div>
+    </section>
     <!-- Conclusion -->
     <section class="content-section">
       <div class="content-left">
