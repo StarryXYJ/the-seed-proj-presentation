@@ -69,7 +69,15 @@ onUnmounted(() => {
       </div>
     </section>
 
-    
+    <!-- Vision -->
+    <section class="content-section">
+      <div class="content-left">
+        <h2>{{ t.sections.vision.title }}</h2>
+        <div class="card glass">
+          <p v-for="(text, i) in t.sections.vision.content" :key="i">{{ text }}</p>
+        </div>
+      </div>
+    </section>
 
   <!-- Pain Points -->
     <section class="content-section">
@@ -83,15 +91,7 @@ onUnmounted(() => {
       </div>
     </section>
 
-    <!-- Vision -->
-    <section class="content-section">
-      <div class="content-left">
-        <h2>{{ t.sections.vision.title }}</h2>
-        <div class="card glass">
-          <p v-for="(text, i) in t.sections.vision.content" :key="i">{{ text }}</p>
-        </div>
-      </div>
-    </section>
+
 
     
 
